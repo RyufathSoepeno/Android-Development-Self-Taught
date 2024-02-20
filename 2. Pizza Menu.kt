@@ -37,24 +37,31 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun PizzaOrderScreen() {
+    // State for tracking whether pepperoni checkbox is checked
+    val pepperoniChecked = remember { mutableStateOf(false) }
+    // State for tracking whether extra cheese checkbox is checked
+    val extraCheeseChecked = remember { mutableStateOf(false) }
+
+    // State for holding the order text
+    val orderText = remember { mutableStateOf("") }
+
+    // Text for pepperoni option
+    Text("    Pepperoni")
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // State for tracking whether pepperoni checkbox is checked
-        val pepperoniChecked = remember { mutableStateOf(false) }
-        // State for tracking whether extra cheese checkbox is checked
-        val extraCheeseChecked = remember { mutableStateOf(false) }
-
         // Checkbox for selecting pepperoni topping
         Checkbox(
             checked = pepperoniChecked.value,
             onCheckedChange = { pepperoniChecked.value = it },
             modifier = Modifier.padding(bottom = 8.dp)
         )
-            Text("Pepperoni")
 
+        // Text for extra cheese option
+        Text("Extra Cheese")
 
         // Checkbox for selecting extra cheese topping
         Checkbox(
@@ -62,46 +69,43 @@ fun PizzaOrderScreen() {
             onCheckedChange = { extraCheeseChecked.value = it },
             modifier = Modifier.padding(bottom = 8.dp)
         )
-            Text("Extra Cheese")
 
-
-        // Determine the text to display on the button based on the selected toppings
-        val orderButtonText = if (pepperoniChecked.value || extraCheeseChecked.value) {
-            "Place Order"
-        } else {
-            "Place Order"
-        }
 
         // Button for placing the pizza order
         Button(
             onClick = {
                 // Handle order placement here
-                val order = StringBuilder()
+                val orderBuilder = StringBuilder()
                 if (pepperoniChecked.value) {
-                    order.append("Pepperoni")
+                    orderBuilder.append("Pepperoni")
                 }
                 if (extraCheeseChecked.value) {
-                    if (order.isNotEmpty()) {
-                        order.append(" and Extra Cheese")
+                    if (orderBuilder.isNotEmpty()) {
+                        orderBuilder.append(" and Extra Cheese")
                     } else {
-                        order.append("Extra Cheese")
+                        orderBuilder.append("Extra Cheese")
                     }
                 }
-                if (order.isEmpty()) {
-                    order.append("Plain")
+                if (orderBuilder.isEmpty()) {
+                    orderBuilder.append("Plain")
                 }
-                // Show order in a dialog or wherever you want
-                // You can also use a Snackbar or Toast to show the order
-                // For simplicity, I'm just printing it here
-                println("Your pizza order: ${order.toString()}")
+
+                // Update the order text state variable
+                orderText.value = orderBuilder.toString()
             },
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            // Display the button text determined earlier
-            Text(text = orderButtonText)
+            // Display the button text based on the order status
+            Text(text = "Place Order")
+        }
+
+        // Display the order text
+        if (orderText.value.isNotEmpty()) {
+            Text(text = "Your order: ${orderText.value}")
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
