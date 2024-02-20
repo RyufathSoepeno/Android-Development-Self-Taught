@@ -1,4 +1,4 @@
-package com.example.selflearning
+package com.example.selflearning /** Importing is very important */
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
